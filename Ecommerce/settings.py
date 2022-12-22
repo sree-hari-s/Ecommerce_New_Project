@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    #'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'accounts',
     'store',
     'carts',
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -113,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE =  'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -137,3 +139,26 @@ MEDIA_ROOT = BASE_DIR /'media'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# JAZZMIN_SETTINGS={
+#     "site_title":"GreatKart",
+#     "site_header": "Store",
+#     #"site_logo": "images/icons/logo-02.png",
+#     "welcome_sign": "Welcome to the Admin Page",
+#     "login_logo": "images/logo.png",
+#     # "login_logo_dark": "images/icons/logo-02.png",    
+# }
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+
+}
+
+#SMTP CONFIGURATION
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' 
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_HOST=587
+EMAIL_HOST_USER = 'aegonn99@gmail.com'
+EMAIL_HOST_PASSWORD = 'sosivi5589'
+EMAIL_USE_TLS= True

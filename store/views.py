@@ -37,10 +37,11 @@ def product_detail(request,category_slug,product_slug):
         in_cart= CartItem.objects.filter(cart__cart_id=_cart_id(request),product=single_product).exists()
     except Exception as e:
         raise e
-    
+    product_gallery = ProductGallery.objects.filter(product_id=single_product)
     context ={
         'single_product':single_product,
-        'in_cart':in_cart
+        'in_cart':in_cart,
+        'product_gallery':product_gallery,
     }
     
     return render(request, 'store/product_detail.html',context)
