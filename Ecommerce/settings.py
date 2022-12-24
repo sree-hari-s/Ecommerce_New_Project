@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+from django.contrib.messages import constants as messages
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,14 +32,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    #'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #own
+    # own
     'category',
     'accounts',
     'store',
@@ -78,7 +78,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Ecommerce.wsgi.application'
 
-AUTH_USER_MODEL='accounts.Account' #app name / model name
+AUTH_USER_MODEL = 'accounts.Account'  # app name / model name
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -115,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE =  'Asia/Kolkata'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -126,39 +126,30 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR /'static'
+STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [
     'Ecommerce/static',
 ]
 
-#media files
+# media files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR /'media'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# JAZZMIN_SETTINGS={
-#     "site_title":"GreatKart",
-#     "site_header": "Store",
-#     #"site_logo": "images/icons/logo-02.png",
-#     "welcome_sign": "Welcome to the Admin Page",
-#     "login_logo": "images/logo.png",
-#     # "login_logo_dark": "images/icons/logo-02.png",    
-# }
 
-from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 
 }
 
-#SMTP CONFIGURATION
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' 
-EMAIL_HOST='smtp.gmail.com'
-EMAIL_HOST=587
+# SMTP CONFIGURATION
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 587
 EMAIL_HOST_USER = 'aegonn99@gmail.com'
-EMAIL_HOST_PASSWORD = 'sosivi5589'
-EMAIL_USE_TLS= True
+EMAIL_HOST_PASSWORD = 'taazcmbfclrfpioz'
+EMAIL_USE_TLS = True

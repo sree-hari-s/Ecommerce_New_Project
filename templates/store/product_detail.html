@@ -2,7 +2,21 @@
 {% load static %}
 
 {% block content %}
+<style>
+	.mainImage {	
+		overflow: hidden;
+		margin: 0 auto;
+	}
 
+	.mainImage img {
+		width: 100%;
+		transition: 0.5s all ease-in-out;
+	}
+
+	.mainImage:hover img {
+		transform: scale(1.5);
+	}
+</style>
 <section class="section-content padding-y bg">
 	<div class="container">
 
@@ -18,8 +32,9 @@
 					</article> <!-- gallery-wrap .end// -->
 					<ul class="thumb">
 						<li>
-							<a href="{{ single_product.images.url }}" target="mainImage"><img
-									src="{{ single_product.images.url }}" alt="Product Image"></a>
+							<a href="{{ single_product.images.url }}" target="mainImage">
+								<img src="{{ single_product.images.url }}" alt="Product Image"></a>
+
 							{% for i in product_gallery %}
 							<a href="{{i.image.url}}" target="mainImage"><img src="{{i.image.url}}"
 									alt="Product Image"></a>
@@ -84,5 +99,4 @@
 	</div> <!-- container .//  -->
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
-
 {% endblock %}

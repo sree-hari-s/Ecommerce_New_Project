@@ -1,14 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
+
 # Create your models here.
 
-
 class MyAccountManager(BaseUserManager):
-    #for creating normal users
     def create_user(self, first_name, last_name, username, email, password=None):
         if not email:
             raise ValueError('User must have an email address')
+
         if not username:
             raise ValueError('User must have an username')
 
@@ -18,12 +18,13 @@ class MyAccountManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
         )
+
         user.set_password(password)
         user.save(using=self._db)
         return user
-    #for creating super users
-    def create_superuser(self,first_name,last_name,email,username,password):
-        user=self.create_user(
+
+    def create_superuser(self, first_name, last_name, email, username, password):
+        user = self.create_user(
             email=self.normalize_email(email),
             username=username,
             password=password,
@@ -45,7 +46,7 @@ class Account(AbstractBaseUser):
     email = models.EmailField(max_length=100, unique=True)
     phone_number = models.CharField(max_length=50)
 
-    # required fields
+    # required
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now_add=True)
     is_admin = models.BooleanField(default=False)
@@ -57,7 +58,10 @@ class Account(AbstractBaseUser):
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     objects = MyAccountManager()
-    
+
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
+
     def __str__(self):
         return self.email
 
@@ -82,4 +86,3 @@ class UserProfile(models.Model):
 
     def full_address(self):
         return f'{self.address_line_1} {self.address_line_2}'
-
