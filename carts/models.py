@@ -16,6 +16,7 @@ class Cart(models.Model):
 class CartItem(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    #coupon = models.ForeignKey(Coupon,on_delete=models.SET_NULL,null=True,blank=True)
     variations = models.ManyToManyField(Variation, blank=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField()

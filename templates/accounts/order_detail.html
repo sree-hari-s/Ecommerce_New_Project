@@ -41,7 +41,8 @@
                                         <li><strong>Order</strong> #{{order.order_number}}</li>
                                         <li><strong>Transaction ID</strong> {{order.payment.payment_id}}</li>
                                         <li><strong>Order Date:</strong> {{order.created_at}}</li>
-                                        <li><strong>Status:</strong> {{order.payment.status}}</li>
+                                        <li><strong>Payment Status:</strong> {{order.payment.status}}</li>
+                                        <li><strong>Order Status:</strong> {{order.status}}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -70,7 +71,7 @@
                                                     </p>
                                                 </td>
                                                 <td class="text-center">{{item.quantity}}</td>
-                                                <td class="text-center">${{item.product_price}} USD</td>
+                                                <td class="text-center">${{item.product_price}} USD each</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
@@ -95,6 +96,18 @@
                             <div class="invoice-footer mt25">
                                 <p class="text-center">Thank you for shopping with us!</p>
                             </div>
+                        </div>
+                        <div>
+
+                            {% if order.status == 'Delivered'  %}
+                            <a href="{% url 'cancel' order.order_number 1 %}"><button class="btn btn-danger">Return</button></a>
+                            {% elif order.status == 'Cancelled' %}
+                            {% elif order.status == 'Returned' %}
+                            {% else %}
+                            <a href="{% url 'cancel' order.order_number 0 %}"><button class="btn btn-danger">Cancel Order</button></a>
+                            {% endif %}
+
+
                         </div>
                         <!-- col-lg-12 end here -->
                     </div>

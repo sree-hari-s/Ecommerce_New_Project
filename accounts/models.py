@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,Permission
+from django.contrib import auth
 
 # Create your models here.
 
@@ -70,6 +70,11 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self, add_label):
         return True
+    
+    def get_all_permissions(user=None):
+        if user.is_superadmin:
+            return set()
+    
 
 
 class UserProfile(models.Model):

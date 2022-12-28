@@ -18,10 +18,11 @@ class Payment(models.Model):
 
 class Order(models.Model):
     STATUS = (
-        ('New', 'New'),
-        ('Accepted', 'Accepted'),
-        ('Completed', 'Completed'),
+        ('Placed', 'Placed'),
+        ('Shipping', 'Shipping'),
+        ('Delivered', 'Delivered'),
         ('Cancelled', 'Cancelled'),
+        ('Returned','Returned')
     )
 
     user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
@@ -39,7 +40,7 @@ class Order(models.Model):
     order_note = models.CharField(max_length=100, blank=True)
     order_total = models.FloatField()
     tax = models.FloatField()
-    status = models.CharField(max_length=10, choices=STATUS, default='New')
+    status = models.CharField(max_length=10, choices=STATUS, default='Placed')
     ip = models.CharField(blank=True, max_length=20)
     is_ordered = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

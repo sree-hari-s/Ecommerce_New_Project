@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -143,13 +144,42 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
-
 }
 
 # SMTP CONFIGURATION
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST = 587
+EMAIL_PORT = 587
 EMAIL_HOST_USER = 'aegonn99@gmail.com'
 EMAIL_HOST_PASSWORD = 'taazcmbfclrfpioz'
 EMAIL_USE_TLS = True
+
+
+JAZZMIN_SETTINGS={
+    "site_title":"GreatKart",
+    "site_header": "GreatKart",
+    "site_brand": "Administration",
+    "site_logo": "images/favicon.ico",
+    "welcome_sign": "Welcome to the Admin Page",
+    "login_logo": "images/logo.png",
+    #"login_logo_dark": "images/icons/logo-02.png",   
+    
+    "icons": {
+        "accounts.account": "fas fa-user",
+        "accounts.userprofile": "fas fa-address-card",
+
+        'orders.OrderProduct': 'fas fa-industry',
+        'orders.order': 'fa fa-receipt',
+        'orders.Payment':'fa fa-credit-card',
+
+        'category.category':'fa fa-edit',
+
+        'store.ProductGallery':'fa fa-image',
+        'store.Product':'fa fa-shopping-basket',
+        'store.Variation':'fa fa-rss',
+        
+        'carts.Cart':'fa fa-shopping-cart',
+        'carts.CartItem':'fa fa-cart-plus',
+    },
+}
+JAZZMIN_SETTINGS["show_ui_builder"] = True

@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import *
 import admin_thumbnails
 # Register your models here.
+
 @admin_thumbnails.thumbnail('image')
 class ProductGalleryInline(admin.TabularInline):
     model = ProductGallery
