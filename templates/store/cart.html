@@ -1,6 +1,7 @@
 {% extends "base.html" %} {% load static %} {% block content %}
 <section class="section-content padding-y bg">
   <div class="container">
+    {% include 'includes/alerts.html' %}
     <!-- ============================ COMPONENT 1 ================================= -->
     {% if not cart_items %}
     <h2 class="text-center">Your Shopping Cart is Empty</h2>
@@ -101,14 +102,34 @@
               <dt>Tax:</dt>
               <dd class="text-right">${{tax}}</dd>
             </dl>
+            
+            {% if coupon_obj.discount_price %}       
+            <dl class="dlist-align">
+              <dt>Discount:</dt>
+              <dd class="text-right">${{coupon_obj.discount_price}}</dd>
+            </dl>
+            {% else %}
+            {% endif %}
             <dl class="dlist-align">
               <dt>Total:</dt>
-              <dd class="text-right text-dark b"><strong>${{grand_total}}</strong></dd>
+              <dd class="text-right text-dark b"><strong>${{grand_total| floatformat:2}}</strong></dd>
             </dl>
             <hr />
             <p class="text-center mb-3">
               <img src="{% static './images/misc/payments.png'%}" height="26" />
             </p>
+          <form method="POST" >
+
+            {% csrf_token %}
+            <div class="input-group">
+              <input type="text" name="coupon" class="form-control" placeholder="Enter coupon code">
+              <div class="input-group-append">
+                <button class="btn btn-primary mb-2" type="submit">
+                  <span>Apply</span>
+                </button>
+              </div>
+            </div>
+          </form>   
             <a href="{% url 'checkout' %}" class="btn btn-primary btn-block">
               Checkout
             </a>

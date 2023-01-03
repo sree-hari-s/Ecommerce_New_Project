@@ -3,7 +3,10 @@ from store.models import *
 from .models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 # Create your views here.
+
+
 def _cart_id(request):
     cart=request.session.session_key
     if not cart:
@@ -24,13 +27,16 @@ def add_cart(request,product_id):
                 try:
                     variation = Variation.objects.get(product=product,variation_category__iexact=key,variation_value__iexact=value)
                     product_variation.append(variation)
-                    
+
                 except:
                     pass
         
         is_cart_item_exists=CartItem.objects.filter(product=product,user=current_user).exists()
         if is_cart_item_exists:
             cart_item=CartItem.objects.filter(product=product,user=current_user)
+            if product.stock<=cart_item[0].quantity:
+                messages.error(request,'Out of stock')
+                return redirect('cart')
             ex_var_list=[]
             id = []
             for item in cart_item:
@@ -159,17 +165,41 @@ def cart(request,total=0, quantity =0 , cart_items=None):
             cart= Cart.objects.get(cart_id=_cart_id(request))
             cart_items=CartItem.objects.filter(cart=cart,is_active=True)
         for cart_item in cart_items:
-            total+=(cart_item.product.price * cart_item.quantity)
-            quantity+= cart_item.quantity
-        tax = (2* total)/100
+            product = Product.objects.get(pk = cart_item.product.id)
+            if product.stock<cart_item.quantity:
+                cart_item.delete()
+                return redirect('cart')
+            else:
+                total+=(cart_item.product.price * cart_item.quantity)
+                quantity+= cart_item.quantity       
+        tax = (0.02)*(total) 
         grand_total=total+tax
+        coupon_obj=None
     except ObjectDoesNotExist:
         pass
+    
+    if request.method == 'POST':
+        coupon = request.POST.get('coupon')
+        coupon_obj = Coupon.objects.filter(coupon_code__icontains = coupon).get()      
+        try: 
+            is_coupon_found = CouponDetail.objects.filter(coupon_id=coupon_obj.pk,user_id=request.user.pk).count()
+        except:
+            is_coupon_found = 0
+                
+        if is_coupon_found == 0:
+            CouponDetail.objects.create(user=request.user,coupon=coupon_obj).save()
+            messages.success(request,"Coupon added")
+        else:
+            messages.warning(request,"Coupon redeemed")
+        
+        grand_total-=coupon_obj.discount_price 
+        
     context={
         'total':total,
         'quantity':quantity,
         'cart_items':cart_items,
         'tax':tax,
+        'coupon_obj':coupon_obj,
         'grand_total':grand_total,
     }
     return render(request,'store/cart.html',context)
@@ -187,7 +217,8 @@ def checkout(request,total=0, quantity =0 , cart_items=None):
         for cart_item in cart_items:
             total+=(cart_item.product.price * cart_item.quantity)
             quantity+= cart_item.quantity
-        tax = (2* total)/100
+        
+        tax=(0.02)*(total) 
         grand_total=total+tax
     except ObjectDoesNotExist:
         pass

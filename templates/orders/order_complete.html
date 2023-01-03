@@ -92,7 +92,13 @@
                                                 <th colspan="2" class="text-right">Tax:</th>
                                                 <th class="text-center">${{order.tax}} USD</th>
                                             </tr>
-
+                                            {% if coupon.coupon.discount_price %}
+                                            <tr>
+                                                <th colspan="2" class="text-right">Discount:</th>
+                                                <th class="text-center">${{coupon.coupon.discount_price}} USD</th>
+                                            </tr>
+                                            {% else %}
+                                            {% endif %}
                                             <tr>
                                                 <th colspan="2" class="text-right">Grand Total:</th>
                                                 <th class="text-center">${{order.order_total}} USD</th>

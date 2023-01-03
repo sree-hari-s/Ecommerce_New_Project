@@ -101,19 +101,27 @@
 							<dt>Tax:</dt>
 							<dd class="text-right"> $ {{tax}}</dd>
 						</dl>
+						{% if coupon.coupon.discount_price %}
+						<dl class="dlist-align">
+							<dt>Discount:</dt>
+							<dd class="text-right">${{coupon.coupon.discount_price}}</dd>
+						</dl>
+						{% else %}
+						{% endif %}
 						<dl class="dlist-align">
 							<dt>Grand Total:</dt>
-							<dd class="text-right text-dark b"><strong>$ {{grand_total}}</strong></dd>
+							<dd class="text-right text-dark b"><strong>$ {{grand_total| floatformat:2}}</strong></dd>
 						</dl>
 						<hr>
 						<p class="text-center mb-3">
 							<img src="{% static './images/misc/payments.png' %}" height="26">
 						</p>
-
+						<a href="{% url 'order_complete' %}" class="btn btn-primary btn-block mb-3">
+							Cash on Delivery
+						</a>
 						<div id="paypal-button-container">
 							<!-- PayPal Button Will Load -->
 						</div>
-
 					</div> <!-- card-body.// -->
 				</div> <!-- card.// -->
 				<div class="alert alert-danger" role="alert">
@@ -203,8 +211,6 @@
 				}
 			});
 		}
-
-
 	}).render('#paypal-button-container');
 </script>
 

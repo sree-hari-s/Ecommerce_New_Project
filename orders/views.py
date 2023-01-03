@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from carts.models import CartItem
+from carts.models import *
 from .forms import OrderForm
 import datetime
 from .models import Order, Payment, OrderProduct
@@ -89,8 +89,20 @@ def place_order(request, total=0, quantity=0,):
         total += (cart_item.product.price * cart_item.quantity)
         quantity += cart_item.quantity
     tax = (2 * total)/100
-    grand_total = total + tax
-
+    try:
+        coupon = CouponDetail.objects.filter(user=current_user)
+        coupon_count = CouponDetail.objects.filter(user=current_user).count()
+    except:
+        pass
+    if coupon_count>0:
+        for i in coupon:
+            coupon=i
+        
+        grand_total = total + tax-coupon.coupon.discount_price
+        grand_total=round(grand_total,2) 
+    else:
+        grand_total = total + tax
+    
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
@@ -126,6 +138,7 @@ def place_order(request, total=0, quantity=0,):
                 'order': order,
                 'cart_items': cart_items,
                 'total': total,
+                'coupon': coupon,
                 'tax': tax,
                 'grand_total': grand_total,
             }
@@ -141,11 +154,13 @@ def order_complete(request):
     try:
         order = Order.objects.get(order_number=order_number, is_ordered=True)
         ordered_products = OrderProduct.objects.filter(order_id=order.id)
-
+        coupon = CouponDetail.objects.filter(user=request.user)
+        for i in coupon:
+            coupon=i
         subtotal = 0
         for i in ordered_products:
             subtotal += i.product_price * i.quantity
-
+        
         payment = Payment.objects.get(payment_id=transID)
 
         context = {
@@ -155,6 +170,7 @@ def order_complete(request):
             'transID': payment.payment_id,
             'payment': payment,
             'subtotal': subtotal,
+            'coupon':coupon,
         }
         return render(request, 'orders/order_complete.html', context)
     except (Payment.DoesNotExist, Order.DoesNotExist):
@@ -169,3 +185,4 @@ def cancel(request,order_id,value):
         order.status = 'Returned'
         order.save()
     return redirect(f"/accounts/order_detail/{order_id}/")
+

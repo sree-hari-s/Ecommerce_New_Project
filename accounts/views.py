@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import *
 from .models import *
-from orders.models import Order, OrderProduct
+from carts.models import *
+from orders.models import *
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -55,7 +56,7 @@ def register(request):
             to_email = email
             send_email = EmailMessage(mail_subject, message, to=[to_email])
             send_email.send()
-            messages.success(request, 'Thank you for registering with us. We have sent you a verification email to your email address [rathan.kumar@gmail.com]. Please verify it.')
+            messages.success(request, 'Thank you for registering with us. We have sent you a verification email to your email address Please verify it.')
             return redirect('/accounts/login/?command=verification&email='+email)
             # return redirect('home')
     else:
@@ -170,8 +171,10 @@ def dashboard(request):
 def my_orders(request):
     orders = Order.objects.filter(
         user=request.user, is_ordered=True).order_by('-created_at')
+    
     context = {
         'orders': orders,
+        
     }
     return render(request, 'accounts/my_orders.html', context)
 
@@ -183,11 +186,14 @@ def order_detail(request, order_id):
     subtotal = 0
     for i in order_detail:
         subtotal += i.product_price * i.quantity
-
+    coupon = CouponDetail.objects.filter(user=request.user)
+    for i in coupon:
+        coupon=i
     context = {
         'order_detail': order_detail,
         'order': order,
         'subtotal': subtotal,
+        #'coupon':coupon,
     }
     return render(request, 'accounts/order_detail.html', context)
 

@@ -6,7 +6,7 @@
 
 <div class="container"
     style="margin: 0 auto;width: 50%;padding: 50px;background: #f1f1f1;margin-top: 50px;margin-bottom: 50px;">
-    <div class="row invoice row-printable">
+    <div class="row invoice row-printable" >
         <div class="col-md-12">
             <!-- col-lg-12 start here -->
             <div class="panel panel-default plain" id="dash_0">
@@ -17,7 +17,8 @@
                         <div class="col-lg-6">
                             <!-- col-lg-6 start here -->
                             <div class="invoice-logo"><img src="{% static '/images/logo.png' %}" alt="Invoice logo"
-                                    style="max-height: 40px;"></div>
+                                    style="max-height: 40px;">
+                            </div>
                         </div>
                         <!-- col-lg-6 end here -->
                         <div class="col-lg-6">
@@ -80,11 +81,18 @@
                                                 <th colspan="2" class="text-right">Sub Total:</th>
                                                 <th class="text-center">${{subtotal}} USD</th>
                                             </tr>
+
                                             <tr>
                                                 <th colspan="2" class="text-right">Tax:</th>
                                                 <th class="text-center">${{order.tax}} USD</th>
                                             </tr>
-
+                                            {% if coupon.coupon.discount_price %}
+                                            <tr>
+                                                <th colspan="2" class="text-right">Discount:</th>
+                                                <th class="text-center">${{coupon.coupon.discount_price}} USD</th>
+                                            </tr>
+                                            {% else %}
+                                            {% endif %}
                                             <tr>
                                                 <th colspan="2" class="text-right">Grand Total:</th>
                                                 <th class="text-center">${{order.order_total}} USD</th>
@@ -97,8 +105,8 @@
                                 <p class="text-center">Thank you for shopping with us!</p>
                             </div>
                         </div>
+                    <div>
                         <div>
-
                             {% if order.status == 'Delivered'  %}
                             <a href="{% url 'cancel' order.order_number 1 %}"><button class="btn btn-danger">Return</button></a>
                             {% elif order.status == 'Cancelled' %}
@@ -106,9 +114,11 @@
                             {% else %}
                             <a href="{% url 'cancel' order.order_number 0 %}"><button class="btn btn-danger">Cancel Order</button></a>
                             {% endif %}
-
-
                         </div>
+                        <div>
+                            <button id="cmd" class="btn btn-primary mt-2">Generate PDF</button>
+                        </div>
+                    </div>
                         <!-- col-lg-12 end here -->
                     </div>
                     <!-- End .row -->
@@ -119,6 +129,20 @@
         <!-- col-lg-12 end here -->
     </div>
 </div>
-
-
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.2.61/jspdf.min.js"></script>
+<script>
+    var doc = new jsPDF();
+    var specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
+        }
+    };
+    $('#cmd').click(function () {
+        doc.fromHTML($('#dash_0').html(), 15, 15, {
+            'width': 170,
+            'elementHandlers': specialElementHandlers
+        });
+        doc.save('data.pdf');
+    });
+</script>
 {% endblock %}
