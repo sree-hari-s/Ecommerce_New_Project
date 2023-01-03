@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from django.contrib.messages import constants as messages
 from pathlib import Path
-
+from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,10 +21,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qa3+zzk26-c8&jr=+a*b#$*1=#6pkht#f+m+_$w1(ubti&!gs0'
-
+SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG',default = True, cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -46,6 +45,7 @@ INSTALLED_APPS = [
     'carts',
     'orders',
     'charts',
+    
 ]
 
 MIDDLEWARE = [
@@ -149,12 +149,11 @@ MESSAGE_TAGS = {
 
 # SMTP CONFIGURATION
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'aegonn99@gmail.com'
-EMAIL_HOST_PASSWORD = 'taazcmbfclrfpioz'
-EMAIL_USE_TLS = True
-
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT', cast = int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS',cast = bool)
 
 JAZZMIN_SETTINGS={
     "site_title":"GreatKart",
