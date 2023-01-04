@@ -156,6 +156,7 @@ def remove_cart_item(request,product_id,cart_item_id):
     return redirect('cart')
 
 def cart(request,total=0, quantity =0 , cart_items=None):
+    coupon_obj=None
     try:
         tax=0
         grand_total=0
@@ -174,25 +175,36 @@ def cart(request,total=0, quantity =0 , cart_items=None):
                 quantity+= cart_item.quantity       
         tax = (0.02)*(total) 
         grand_total=total+tax
-        coupon_obj=None
+        
     except ObjectDoesNotExist:
         pass
     
     if request.method == 'POST':
-        coupon = request.POST.get('coupon')
-        coupon_obj = Coupon.objects.filter(coupon_code__icontains = coupon).get()      
+        coupon = request.POST.get('coupon')     
         try: 
+            try:
+                coupon_obj = Coupon.objects.filter(coupon_code__icontains = coupon).get()
+                print(coupon_obj)
+            except:
+                coupon_obj=None
+                
             is_coupon_found = CouponDetail.objects.filter(coupon_id=coupon_obj.pk,user_id=request.user.pk).count()
         except:
             is_coupon_found = 0
-                
-        if is_coupon_found == 0:
-            CouponDetail.objects.create(user=request.user,coupon=coupon_obj).save()
-            messages.success(request,"Coupon added")
-        else:
-            messages.warning(request,"Coupon redeemed")
+            coupon_obj=None    
         
-        grand_total-=coupon_obj.discount_price 
+        if coupon_obj != None:
+            if is_coupon_found == 0:
+                CouponDetail.objects.create(user=request.user,coupon=coupon_obj).save()
+                
+                messages.success(request,"Coupon added")
+                grand_total-=coupon_obj.discount_price 
+            else:
+                messages.warning(request,"Coupon redeemed")
+                grand_total=total+tax
+        else:
+            messages.warning(request,"Coupon Not found")
+            grand_total=total+tax
         
     context={
         'total':total,
