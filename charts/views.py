@@ -6,9 +6,10 @@ from django.http import JsonResponse
 from orders.models import *
 from .utils import *
 
+
 def get_filter_options(request):
     grouped_purchases = (
-        OrderProduct.objects.annotate(year=ExtractYear("order__created"))
+        OrderProduct.objects.annotate(year=ExtractYear("order__created_at"))
         .values("year")
         .order_by("-year")
         .distinct()
@@ -21,10 +22,12 @@ def get_filter_options(request):
         }
     )
 
+
 def get_sales_chart(request, year):
-    purchases = OrderProduct.objects.filter(order__created__year=year)
+    purchases = OrderProduct.objects.annotate(
+        year=ExtractYear("order__created_at"))
     grouped_purchases = (
-        purchases.annotate(month=ExtractMonth("order__created"))
+        purchases.annotate(month=ExtractMonth("order__created_at"))
         .values("month")
         .annotate(average=Sum("product_price"))
         .values("month", "average")
@@ -55,9 +58,10 @@ def get_sales_chart(request, year):
 
 
 def spend_per_customer_chart(request, year):
-    purchases = OrderProduct.objects.filter(order__created__year=year)
+    purchases =OrderProduct.objects.annotate(
+        year=ExtractYear("order__created_at"))
     grouped_purchases = (
-        purchases.annotate(month=ExtractMonth("order__created"))
+        purchases.annotate(month=ExtractMonth("order__created_at"))
         .values("month")
         .annotate(average=Avg("product_price"))
         .values("month", "average")
@@ -88,9 +92,9 @@ def spend_per_customer_chart(request, year):
     )
 
 
-
 def payment_success_chart(request, year):
-    purchases = OrderProduct.objects.filter(order__created__year=year)
+    purchases = OrderProduct.objects.annotate(
+        year=ExtractYear("order__created_at"))
 
     return JsonResponse(
         {
