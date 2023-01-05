@@ -11,7 +11,7 @@ class CartItemAdmin(admin.ModelAdmin):
 class CouponAdmin(admin.ModelAdmin):
     list_display=('coupon_code', 'discount_price','is_expired', )
     
-admin.site.register(Cart,CartAdmin)
-admin.site.register(CartItem,CartItemAdmin)
+# admin.site.register(Cart,CartAdmin)
+# admin.site.register(CartItem,CartItemAdmin)
 admin.site.register(Coupon,CouponAdmin)
 admin.site.register(CouponDetail)
