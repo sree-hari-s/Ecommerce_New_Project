@@ -98,20 +98,20 @@ def payment_success_chart(request, year):
         {
             "title": f"Payment success rate in {year}",
             "data": {
-                "labels": ["Shipping", "Placed", "Delivered", "Cancelled", "Returned"],
+                "labels": [ "Placed", "Delivered", "Cancelled"],
                 "datasets": [
                     {
                         "label": "Amount (Rs)",
-                        "backgroundColor": [colorSuccess, colorDanger, colorPrimary, colorPalette[0], colorPalette[1]],
-                        "borderColor": [colorSuccess, colorDanger, colorPrimary, colorPalette[0], colorPalette[1]],
+                        "backgroundColor": [colorSuccess, colorDanger, colorPrimary,],
+                        "borderColor": [colorSuccess, colorDanger, colorPrimary],
                         "data": [
-                            purchases.filter(order__status='Shipping').count(),
+                            
                             purchases.filter(order__status='Placed').count(),
                             purchases.filter(
                                 order__status='Delivered').count(),
                             purchases.filter(
                                 order__status='Cancelled').count(),
-                            purchases.filter(order__status='Returned').count(),
+                            
                         ],
                     }
                 ],

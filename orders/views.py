@@ -59,14 +59,14 @@ def payments(request):
 
     # Send order recieved email to customer
     
-    # mail_subject = 'Thank you for your order!'
-    # message = render_to_string('orders/order_recieved_email.html', {
-    #     'user': request.user,
-    #     'order': order,
-    # })
-    # to_email = request.user.email
-    # send_email = EmailMessage(mail_subject, message, to=[to_email])
-    # send_email.send()
+    mail_subject = 'Thank you for your order!'
+    message = render_to_string('orders/order_recieved_email.html', {
+        'user': request.user,
+        'order': order,
+    })
+    to_email = request.user.email
+    send_email = EmailMessage(mail_subject, message, to=[to_email])
+    send_email.send()
 
     #Send order number and transaction id back to sendData method via JsonResponse
     data = {
@@ -147,6 +147,16 @@ def place_order(request, total=0, quantity=0,):
     else:
         return redirect('checkout')
     
+def cancel(request,order_id,value):
+    order = Order.objects.filter(order_number=order_id).get()
+    if value == 0:
+        order.status = 'Cancelled'
+        order.save()
+    if value == 1:
+        order.status = 'Returned'
+        order.save()
+    return redirect(f"/accounts/order_detail/{order_id}/")
+
 
 def order_complete(request):
     order_number = request.GET.get('order_number')
@@ -177,13 +187,4 @@ def order_complete(request):
     except (Payment.DoesNotExist, Order.DoesNotExist):
         return redirect('home')
 
-def cancel(request,order_id,value):
-    order = Order.objects.filter(order_number=order_id).get()
-    if value == 0:
-        order.status = 'Cancelled'
-        order.save()
-    if value == 1:
-        order.status = 'Returned'
-        order.save()
-    return redirect(f"/accounts/order_detail/{order_id}/")
 

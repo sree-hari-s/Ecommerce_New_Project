@@ -201,6 +201,7 @@ def cart(request,total=0, quantity =0 , cart_items=None):
                 grand_total-=coupon_obj.discount_price 
             else:
                 messages.warning(request,"Coupon redeemed")
+                coupon_obj=None
                 grand_total=total+tax
         else:
             messages.warning(request,"Coupon Not found")
