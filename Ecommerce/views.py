@@ -6,3 +6,5 @@ def home(request):
     context = {'products':products}
     return render(request,'home.html',context)
 
+def handle_not_found(request,exception):
+    return render(request,'customerror/404.html')

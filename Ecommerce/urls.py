@@ -30,3 +30,5 @@ urlpatterns = [
     path('orders/', include('orders.urls')),
     path('', include('charts.urls')),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404='Ecommerce.views.handle_not_found'
