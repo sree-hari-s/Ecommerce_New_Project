@@ -15,7 +15,7 @@ def get_filter_options(request):
         .distinct()
     )
     options = [purchase["year"] for purchase in grouped_purchases]
-
+    
     return JsonResponse(
         {
             "options": options,
@@ -33,7 +33,6 @@ def get_sales_chart(request, year):
         .values("month", "average")
         .order_by("month")
     )
-
     sales_dict = get_year_dict()
 
     for group in grouped_purchases:
@@ -58,7 +57,7 @@ def get_sales_chart(request, year):
 
 
 def spend_per_customer_chart(request, year):
-    purchases =OrderProduct.objects.annotate(
+    purchases = OrderProduct.objects.annotate(
         year=ExtractYear("order__created_at"))
     grouped_purchases = (
         purchases.annotate(month=ExtractMonth("order__created_at"))
@@ -67,13 +66,12 @@ def spend_per_customer_chart(request, year):
         .values("month", "average")
         .order_by("month")
     )
-
     spend_per_customer_dict = get_year_dict()
 
     for group in grouped_purchases:
-        spend_per_customer_dict[months[group["month"] - 1]
-                                ] = round(group["average"], 2)
-
+        spend_per_customer_dict[months[group["month"] - 1]] = round(group["average"], 2)
+    
+    
     return JsonResponse(
         {
             "title": f"Spend per customer in {year}",
@@ -100,17 +98,20 @@ def payment_success_chart(request, year):
         {
             "title": f"Payment success rate in {year}",
             "data": {
-                "labels": ["Payed", "Pending"],
+                "labels": ["Shipping", "Placed", "Delivered", "Cancelled", "Returned"],
                 "datasets": [
                     {
                         "label": "Amount (Rs)",
-                        "backgroundColor": [colorSuccess, colorDanger],
-                        "borderColor": [colorSuccess, colorDanger],
+                        "backgroundColor": [colorSuccess, colorDanger, colorPrimary, colorPalette[0], colorPalette[1]],
+                        "borderColor": [colorSuccess, colorDanger, colorPrimary, colorPalette[0], colorPalette[1]],
                         "data": [
+                            purchases.filter(order__status='Shipping').count(),
+                            purchases.filter(order__status='Placed').count(),
                             purchases.filter(
-                                order__billing_status=True).count(),
+                                order__status='Delivered').count(),
                             purchases.filter(
-                                order__billing_status=False).count(),
+                                order__status='Cancelled').count(),
+                            purchases.filter(order__status='Returned').count(),
                         ],
                     }
                 ],

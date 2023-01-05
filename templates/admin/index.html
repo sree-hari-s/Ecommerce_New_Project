@@ -45,18 +45,21 @@
     <div class="row" id="graph">
         {% comment %} <h2>tag</h2> {% endcomment %}
         <div class="col-12 my-2">
-            <canvas id="salesChart" style="height:600px;"></canvas>
+            <canvas id="salesChart" style="height:600px;">
+            </canvas>
         </div>
         <div class="col-12 my-2">
-            <canvas id="paymentSuccessChart"></canvas>
+            <canvas id="paymentSuccessChart" style="height:600px;">
+            </canvas>
         </div>
-        {% comment %} <div class="col-12 my-2">
-            <canvas id="spendPerCustomerChart"></canvas>
-        </div> {% endcomment %}
-
+        <div class="col-12 my-2">
+            <canvas id="spendPerCustomerChart" style="height:600px;">
+            </canvas>
+        </div>
     </div>
 
 </div>
+
 
 <script>
     $(document).ready(function () {
@@ -84,6 +87,7 @@
     });
 
     function loadChart(chart, endpoint) {
+        console.log(endpoint)
         $.ajax({
             url: endpoint,
             type: "GET",
@@ -107,14 +111,18 @@
                 });
                 chart.update();
             },
-            error: () => console.log("Failed to fetch chart data from " + endpoint + "!")
+
+            error: (jsonResponse) => {
+                console.log(jsonResponse)
+                console.log("Failed to fetch chart data from " + endpoint + "!")
+            }
         });
     }
 
     function loadAllCharts(year) {
-        loadChart(salesChart, `/charts/sales/${year}/`);
-        loadChart(spendPerCustomerChart, `/charts/sales/spend-per-customer/${year}/`);
         loadChart(paymentSuccessChart, `/charts/sales/payment-success/${year}/`);
+        loadChart(spendPerCustomerChart, `/charts/sales/spend-per-customer/${year}/`);
+        loadChart(salesChart, `/charts/sales/${year}/`);
     }
 </script>
 
