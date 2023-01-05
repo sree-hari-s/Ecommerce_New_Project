@@ -127,9 +127,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static'
 
-STATICFILES_DIRS = ['Ecommerce/static',]
+
+if DEBUG:
+    STATICFILES_DIRS = ['Ecommerce/static',]
+else:
+    STATIC_ROOT = BASE_DIR / 'static'
+
+
     
 # media files
 MEDIA_URL = '/media/'
