@@ -8,6 +8,8 @@ import json
 from store.models import Product
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+import random
+
 # Create your views here.
 
 def payments(request):
@@ -75,9 +77,10 @@ def payments(request):
     }
     return JsonResponse(data)
 
-def place_order(request, total=0, quantity=0,):
+def place_order(request):
     current_user = request.user
-
+    total=0 
+    quantity=0
     # If the cart count is less than or equal to 0, then redirect back to shop
     cart_items = CartItem.objects.filter(user=current_user)
     cart_count = cart_items.count()
@@ -188,3 +191,49 @@ def order_complete(request):
         return redirect('home')
 
 
+def cod(request):
+    order = Order.objects.get(user=request.user, is_ordered=False)
+
+    # Store transaction details inside Payment model
+    payment = Payment(
+        user = request.user,
+        payment_id = random.randint(111111,999999),
+        payment_method = "Cash on Delivery",
+        amount_paid = order.order_total,
+        status = "Placed",
+    )
+    payment.save()
+
+    order.payment = payment
+    order.is_ordered = True
+    order.save()
+
+    # Move the cart items to Order Product table
+    cart_items = CartItem.objects.filter(user=request.user)
+
+    for item in cart_items:
+        orderproduct = OrderProduct()
+        orderproduct.order_id = order.id
+        orderproduct.payment = payment
+        orderproduct.user_id = request.user.id
+        orderproduct.product_id = item.product_id
+        orderproduct.quantity = item.quantity
+        orderproduct.product_price = item.product.price
+        orderproduct.ordered = True
+        orderproduct.save()
+
+        cart_item = CartItem.objects.get(id=item.id)
+        product_variation = cart_item.variations.all()
+        orderproduct = OrderProduct.objects.get(id=orderproduct.id)
+        orderproduct.variations.set(product_variation)
+        orderproduct.save()
+
+
+        # Reduce the quantity of the sold products
+        product = Product.objects.get(id=item.product_id)
+        product.stock -= item.quantity
+        product.save()
+
+    # Clear cart
+    CartItem.objects.filter(user=request.user).delete()
+    return redirect('home')
