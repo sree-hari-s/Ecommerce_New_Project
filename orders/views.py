@@ -236,4 +236,7 @@ def cod(request):
 
     # Clear cart
     CartItem.objects.filter(user=request.user).delete()
-    return redirect('home')
+    
+    
+    return render(request, 'orders/cod_success.html')
+    
