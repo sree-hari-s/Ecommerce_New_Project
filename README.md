@@ -26,7 +26,6 @@ Follow these steps to set up and run the GreatKart E-commerce Website on your lo
    ```
 
 2. Activate the virtual environment:
-
    - On Windows:
 
      ```bash
@@ -53,7 +52,6 @@ Follow these steps to set up and run the GreatKart E-commerce Website on your lo
    ```
 
 5. Create a `.env` File and Fill in Required Environment Variables
-
    In your project directory, create a `.env` file (similar to `.env-sample`) and fill in the required environment variables as follows:
 
    ```python
@@ -69,25 +67,28 @@ Follow these steps to set up and run the GreatKart E-commerce Website on your lo
       5.1 Generate Secret Key in Django Using `get_random_secret_key()` Function
 
       Django provides a convenient function called `get_random_secret_key()` to generate a secret key. This function returns a string of 50 random characters, making it the official way to generate a secret key in Django. Here are the steps to generate a Django secret key:
-
       1. **Access the Python Interactive Shell:**
          To access the Python Interactive shell, run the following command in the terminal of your Django project:
+
          ```bash
          (env) $ python manage.py shell
          ```
-         You'll know you're in the shell when each new line is prefixed with `>>>`.
 
+         You'll know you're in the shell when each new line is prefixed with `>>>`.
       2. **Import `get_random_secret_key()` from `django.core.management.utils`:**
          Before generating the secret key, import the `get_random_secret_key()` function from `django.core.management.utils`. Run the following command and press Enter:
+
          ```python
          >>> from django.core.management.utils import get_random_secret_key
          ```
 
       3. **Generate the Secret Key in the Terminal:**
          Now, you can use the `get_random_secret_key()` function to generate the secret key. Execute the following command:
+
          ```python
          >>> print(get_random_secret_key())
          ```
+
          A random secret key will be generated and displayed on the next line. Your generated key will be different from the example shown above, as it is entirely random.
 
 6. Migrate the project to the database:
@@ -102,4 +103,3 @@ Follow these steps to set up and run the GreatKart E-commerce Website on your lo
    ```bash
    python manage.py runserver
    ```
-
