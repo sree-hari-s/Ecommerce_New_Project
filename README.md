@@ -19,31 +19,24 @@ GreatKart is a full-fledged e-commerce website built using Python Django for the
 
 Follow these steps to set up and run the GreatKart E-commerce Website on your local machine:
 
-1. Install and create a virtual environment:
-
-   ```bash
-   python -m venv myenv
-   ```
-
-2. Activate the virtual environment:
-   - On Windows:
-
-     ```bash
-     source myenv/bin/activate
-     ```
-
-   - On macOS and Linux:
-
-     ```bash
-     source myenv/bin/activate
-     ```
-
-3. Clone the GitHub Repository:
+1. Clone the GitHub Repository:
 
    ```bash
    git clone https://github.com/sree-hari-s/Ecommerce_New_Project.git
-   cd greatkart
    ```
+
+2. Install and create a virtual environment:
+
+   ```cmd
+   virtualenv env
+   ```
+
+3. Activate the virtual environment:
+   - On Windows:
+
+     ```cmd
+     env\Scripts\activate
+     ```
 
 4. Install the project requirements:
 
