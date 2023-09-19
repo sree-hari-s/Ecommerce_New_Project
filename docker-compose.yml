@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: Ecommerce
+    restart: always   
+    ports:
+      - "8000:8000"
+    volumes:
+      - static_volume:/static
+      - accounts_volume:/accounts
+      - carts_volume:/carts
+      - category_volume:/category
+      - charts_volume:/charts
+      - orders_volume:/orders
+      - store_volume:/store
+      - templates_volume:/templates
+    environment:
+      - DJANGO_SETTINGS_MODULE=Ecommerce.settings
+volumes: 
+  static_volume:
+  website_volume:
+  templates_volume:       
